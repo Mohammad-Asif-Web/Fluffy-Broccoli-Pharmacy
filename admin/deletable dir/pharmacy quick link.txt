@@ -1,0 +1,143 @@
+	<?php
+		session_start();
+		if(!isset($_SESSION['store_id'])) {
+			header("location:login.php");
+			exit();
+		}else{
+			include('config/db.php');
+		}
+	?>
+
+	<!-- Data Table CSS -->
+	<?php include("part/data-table-css.php");?>
+	<!-- Data Table CSS end -->
+	
+	<!-- All CSS -->
+	<?php include("part/all-css.php");?>
+	<!-- All CSS end -->
+	
+	
+	  <!-- Navbar -->
+      <?php include("part/navbar.php");?>
+      <!-- Navbar end -->
+
+      <!-- Sidebar -->
+      <?php include("part/sidebar.php");?>
+      <!--  Sidebar end -->
+	  
+	  
+	  
+
+					<div class="card-header py-2">
+						<div class="d-flex justify-content-between align-items-center">
+						  <div>
+							<h6 class="fs-17 font-weight-600 mb-0">Customer</h6>
+						  </div>
+						  <div class="text-right">
+							<a href="add-customer.php" class="btn btn-info btn-sm mr-1"><i class="fas fa-align-justify mr-1"></i>Manage Customer</a>
+						  </div>
+						</div>
+					</div>
+
+
+
+	<!-- Footer -->
+	<?php include("part/footer.php");?>
+	<!-- Footer End -->
+
+	
+	<!-- Alert -->
+	<?php include("part/alert.php");?> 
+	<!-- Alert end --> 
+	
+	<!-- All JS -->
+	<?php include("part/all-js.php");?>
+	<!-- All JS end -->
+	
+	<!-- Data Table JS -->
+	<?php include("part/data-table-js.php");?>
+	<!-- Data Table JS end -->
+	
+	
+	
+	
+	<?php
+	  $n = 0;
+	  $sql = $conn->query("SELECT * FROM `customer` WHERE `store` = '$_SESSION[store_id]'");
+	  while($row = mysqli_fetch_assoc($sql)){
+	?>
+	
+	<?php echo $row['name']; ?>
+	
+	<?php } ?>
+	
+	
+	
+	
+<script>
+    $(function() { 
+      $("#medicine_name").on( "change", function() {
+        var name = $(this).val();
+		// console.log(name);
+        $.ajax({
+          url: "ajaxreq/damageList.php",
+          type: "POST",
+          data: 'request=' + name,
+          success:function(data){
+            $(".tbody-section").html(data);
+          }
+        });
+      });
+    });
+</script>
+
+	  
+	  
+// percentage cal 
+
+	<?php 
+	  if($row['discount_type'] == "flat"){
+			$amount = $row['total_price'] - $row['discount'];
+		}else{
+			$amount = $row['total_price'] - ($row['total_price']*($row['discount']/100));
+		}
+		echo $amount; 
+	?>
+
+
+<? // <---- "<?" this used t just colorized below code
+	
+	if($row['client'] != "Walk-in-Customer"){
+		$row2 = mysqli_fetch_assoc($conn->query("SELECT `id`,`name` FROM `customer` WHERE `store` = '$_SESSION[store_id]' AND `id` = $row[client]"));
+			echo $row2['name']; 
+		}else{
+			echo $row['client']; 
+	}
+
+
+
+  include('../config/db.php');
+  if(isset($_GET['store']) && !ctype_space($_GET['store']) && !empty($_GET['store'])){
+	$shopSql = $conn->query("SELECT * FROM `store` WHERE `store_id` = '$_GET[store]'");
+	$shopcount = mysqli_num_rows($shopSql);
+	if($shopcount > 0){
+	  $shopInfo = mysqli_fetch_assoc($shopSql);
+	}else{
+	  header("location:store-list.php");
+			exit();
+	}
+  }else{
+	header("location:store-list.php");
+		  exit();
+  }
+  
+  
+  select year(order_date) as yeas,month(order_date) as month,sum(total_price) as `total sales`
+     from invoice_summary
+     group by year(order_date),month(order_date)
+     order by year(order_date) desc,month(order_date)desc;
+	 
+	 
+	 
+
+<a href="actions/remove.php?remove&code=<?php echo base64_encode($row['id']); ?>&wr=<?php echo base64_encode("p_expense_category"); ?>" class="btn btn-danger btn-sm delete"> <i class="fa fa-trash"></i> </a>

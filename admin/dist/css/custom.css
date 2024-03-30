@@ -1,0 +1,25 @@
+:root{
+    --9c: #9c9c9c;
+    --off-white: #e6eeee;
+}
+nav.main-header .nav-profile a{
+    color: var(--9c);
+}
+nav.main-header .nav-profile a i{
+    margin-right: 10px;
+}
+
+#profile-body .body-input label{
+    color: var(--9c);
+    margin-top: 10px;
+}
+#profile-body .body-input input{
+    border: 0;
+    border-bottom: 1px solid var(--9c);
+    background-color: transparent;
+    border-radius: 0;
+}
+#profile-body .body-input button{
+    margin: 20px 0;
+}
+
